@@ -1,0 +1,248 @@
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| BabyName           |
+| Premiere           |
+| classicmodels      |
+| henrybooks         |
+| information_schema |
+| test               |
+| z1732715           |
++--------------------+
+7 rows in set (0.08 sec)
+
+MariaDB [(none)]> USE z1732715;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [z1732715]> SHOW TABLES;
++--------------------+
+| Tables_in_z1732715 |
++--------------------+
+| Marina             |
+| MarinaSlip         |
+| Owner              |
+| ServiceCategory    |
+| ServiceRequest     |
++--------------------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> DROP Tables;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+MariaDB [z1732715]> DROP Table *;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '*' at line 1
+MariaDB [z1732715]> CREATE TABLE Owner (
+    -> ownerId    integer,
+    -> firstName  char(20),
+    -> LastName   char(20),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 5
+MariaDB [z1732715]> CREATE TABLE Owner (
+    -> ownerId integer primary key AUTO_INCREMENT,
+    -> firstName char(20),
+    -> lastName  char(20),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 5
+MariaDB [z1732715]> CREATE TABLE Owner ( ownerId integer AUTO_INCREMENT, firstName char(20), lastName  char(20), primary key (ownerId) );
+ERROR 1050 (42S01): Table 'Owner' already exists
+MariaDB [z1732715]> DROP TABLE Owner;
+Query OK, 0 rows affected (0.22 sec)
+
+MariaDB [z1732715]> CREATE TABLE Owner ( ownerId integer primary key AUTO_INCREMENT, firstName char(20), lastName  char(20), );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1
+MariaDB [z1732715]> CREATE TABLE Owner ( ownerId integer AUTO_INCREMENT, firstName char(20), lastName  char(20), primary key (ownerId) );
+Query OK, 0 rows affected (0.92 sec)
+
+MariaDB [z1732715]> # The above command is answer 1
+MariaDB [z1732715]> # Disregard that comment the above command is answer 2
+MariaDB [z1732715]> insert into Owner values('Sam', 'Piecz');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+MariaDB [z1732715]> insert into Owner values(firstName='Sam', lastName='Piecz');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+MariaDB [z1732715]> INSERT INTO Owner (firstName, lastName) VALUES('Sam', 'Piecz');
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [z1732715]> INSERT INTO Owner (firstName, lastName) VALUES('Juan', 'Gomez');
+Query OK, 1 row affected (0.04 sec)
+
+MariaDB [z1732715]> INSERT INTO Owner (firstName, lastName) VALUES('Test', 'Mang');
+Query OK, 1 row affected (0.06 sec)
+
+MariaDB [z1732715]> INSERT INTO Owner (firstName, lastName) VALUES('Another', 'One');
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [z1732715]> INSERT INTO Owner (firstName, lastName) VALUES('Please', 'Stop');
+Query OK, 1 row affected (0.04 sec)
+
+MariaDB [z1732715]> # The above commands are answer 3
+MariaDB [z1732715]> SELECT * FROM Owner;
++---------+-----------+----------+
+| ownerId | firstName | lastName |
++---------+-----------+----------+
+|       1 | Sam       | Piecz    |
+|       2 | Juan      | Gomez    |
+|       3 | Test      | Mang     |
+|       4 | Another   | One      |
+|       5 | Please    | Stop     |
++---------+-----------+----------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above command is answer 4
+MariaDB [z1732715]> CREATE TABLE Pet (
+    -> petId integer AUTO_INCREMENT,
+    -> petName char(30),
+    -> petDOB  char(30),
+    -> ownerID int,
+    -> FOREIGN KEY (ownerID) REFERENCES Owner (ownerId)
+    -> );
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+MariaDB [z1732715]> CREATE TABLE Pet ( petId integer AUTO_INCREMENT, petName char(30), petDOB  char(30), ownerId int, PRIMARY KEY (petId) FOREIGN KEY (ownerId) REFERENCES Owner (ownerId) );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FOREIGN KEY (ownerId) REFERENCES Owner (ownerId) )' at line 1
+MariaDB [z1732715]> CREATE TABLE Pet ( petId integer AUTO_INCREMENT, petName char(30), petDOB  char(30), ownerId int, PRIMARY KEY (petId), FOREIGN KEY (ownerId) REFERENCES Owner (ownerId) );
+Query OK, 0 rows affected (0.27 sec)
+
+MariaDB [z1732715]> # The above command is the answer to number 5
+MariaDB [z1732715]> INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Spot', '01/01/01', '1' );
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [z1732715]> INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Gojira', '02/02/12', '1' );
+Query OK, 1 row affected (0.03 sec)
+
+MariaDB [z1732715]> INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Pickles', '03/03/13', '2' );
+Query OK, 1 row affected (0.09 sec)
+
+MariaDB [z1732715]> INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Bootlicker', '04/04/14', '3' );
+Query OK, 1 row affected (0.08 sec)
+
+MariaDB [z1732715]> INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Runningoutofnames', '05/05/15', '4' );
+Query OK, 1 row affected (0.06 sec)
+
+MariaDB [z1732715]> # The above commands are the answer to number 6
+MariaDB [z1732715]> SELECT * FROM Pet;
++-------+-------------------+----------+---------+
+| petId | petName           | petDOB   | ownerId |
++-------+-------------------+----------+---------+
+|     1 | Spot              | 01/01/01 |       1 |
+|     2 | Gojira            | 02/02/12 |       1 |
+|     3 | Pickles           | 03/03/13 |       2 |
+|     4 | Bootlicker        | 04/04/14 |       3 |
+|     5 | Runningoutofnames | 05/05/15 |       4 |
++-------+-------------------+----------+---------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above command is the answer to number 7
+MariaDB [z1732715]> ALTER TABLES Pet ADD (
+    -> type char(30),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TABLES Pet ADD (
+type char(30),
+)' at line 1
+MariaDB [z1732715]> ALTER TABLES Pet add ( type char(30), );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TABLES Pet add ( type char(30), )' at line 1
+MariaDB [z1732715]> ALTER TABLE Pet ADD ( type char(30), );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1
+MariaDB [z1732715]> ALTER TABLE Pet ADD ( type char(30) );
+Query OK, 0 rows affected (2.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [z1732715]> DESCRIBE Pet;
++---------+----------+------+-----+---------+----------------+
+| Field   | Type     | Null | Key | Default | Extra          |
++---------+----------+------+-----+---------+----------------+
+| petId   | int(11)  | NO   | PRI | NULL    | auto_increment |
+| petName | char(30) | YES  |     | NULL    |                |
+| petDOB  | char(30) | YES  |     | NULL    |                |
+| ownerId | int(11)  | YES  | MUL | NULL    |                |
+| type    | char(30) | YES  |     | NULL    |                |
++---------+----------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above commands is the answer to number 8
+MariaDB [z1732715]> UPDATE TABLE Pet SET type='animal';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TABLE Pet SET type='animal'' at line 1
+MariaDB [z1732715]> UPDATE Pet SET type='animal';
+Query OK, 5 rows affected (0.10 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+MariaDB [z1732715]> # Above is the answer to number 9 - too lazy to name different types
+MariaDB [z1732715]> ALTER TABLE Pet ALTER COLUMN petDOB DATE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DATE' at line 1
+MariaDB [z1732715]> ALTER TABLE Pet MODIFY petDOB DATE;
+Query OK, 5 rows affected (1.19 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [z1732715]> SELET * FROM Pet;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'SELET * FROM Pet' at line 1
+MariaDB [z1732715]> SELECT * FROM Pet;
++-------+-------------------+------------+---------+--------+
+| petId | petName           | petDOB     | ownerId | type   |
++-------+-------------------+------------+---------+--------+
+|     1 | Spot              | 2001-01-01 |       1 | animal |
+|     2 | Gojira            | 2002-02-12 |       1 | animal |
+|     3 | Pickles           | 2003-03-13 |       2 | animal |
+|     4 | Bootlicker        | 2004-04-14 |       3 | animal |
+|     5 | Runningoutofnames | 2005-05-15 |       4 | animal |
++-------+-------------------+------------+---------+--------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above command is the answer to number 10
+MariaDB [z1732715]> SELECT * FROM Pet;
++-------+-------------------+------------+---------+--------+
+| petId | petName           | petDOB     | ownerId | type   |
++-------+-------------------+------------+---------+--------+
+|     1 | Spot              | 2001-01-01 |       1 | animal |
+|     2 | Gojira            | 2002-02-12 |       1 | animal |
+|     3 | Pickles           | 2003-03-13 |       2 | animal |
+|     4 | Bootlicker        | 2004-04-14 |       3 | animal |
+|     5 | Runningoutofnames | 2005-05-15 |       4 | animal |
++-------+-------------------+------------+---------+--------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above is the answer to number 11
+MariaDB [z1732715]> CREATE VIEW showPetAndOwner AS SELECT  FROM 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM' at line 1
+MariaDB [z1732715]> DESCRIBE Pet;
++---------+----------+------+-----+---------+----------------+
+| Field   | Type     | Null | Key | Default | Extra          |
++---------+----------+------+-----+---------+----------------+
+| petId   | int(11)  | NO   | PRI | NULL    | auto_increment |
+| petName | char(30) | YES  |     | NULL    |                |
+| petDOB  | date     | YES  |     | NULL    |                |
+| ownerId | int(11)  | YES  | MUL | NULL    |                |
+| type    | char(30) | YES  |     | NULL    |                |
++---------+----------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> DESCRIBE Owner;
++-----------+----------+------+-----+---------+----------------+
+| Field     | Type     | Null | Key | Default | Extra          |
++-----------+----------+------+-----+---------+----------------+
+| ownerId   | int(11)  | NO   | PRI | NULL    | auto_increment |
+| firstName | char(20) | YES  |     | NULL    |                |
+| lastName  | char(20) | YES  |     | NULL    |                |
++-----------+----------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+MariaDB [z1732715]> CREATE VIEW showPetAndOwner AS SELECT p.petName, o.firstName, o.lastName FROM Pet p JOIN Owner o WHERE p.ownerId = o.ownerId; 
+Query OK, 0 rows affected (0.05 sec)
+
+MariaDB [z1732715]> # The above is answer to number 12
+MariaDB [z1732715]> SELECT * FROM showPetAndOwner;
++-------------------+-----------+----------+
+| petName           | firstName | lastName |
++-------------------+-----------+----------+
+| Spot              | Sam       | Piecz    |
+| Gojira            | Sam       | Piecz    |
+| Pickles           | Juan      | Gomez    |
+| Bootlicker        | Test      | Mang     |
+| Runningoutofnames | Another   | One      |
++-------------------+-----------+----------+
+5 rows in set (0.00 sec)
+
+MariaDB [z1732715]> # The above is answer number 13
+MariaDB [z1732715]> \T
+Currently logging to file 'logit'
+MariaDB [z1732715]> \q
