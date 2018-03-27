@@ -10,9 +10,9 @@
 ###########################################################
 
 # 1
-# DROP VIEW showPetAndOwner;
-# DROP TABLE Pet;
-# DROP TABLE Owner;
+DROP VIEW showPetAndOwner;
+DROP TABLE Pet;
+DROP TABLE Owner;
 
 # 2
 CREATE TABLE Owner ( ownerId integer AUTO_INCREMENT, firstName char(20), lastName  char(20), primary key (ownerId) );
@@ -29,6 +29,7 @@ SELECT * FROM Owner;
 
 # 5
 CREATE TABLE Pet ( petId integer AUTO_INCREMENT, petName char(30), petDOB  char(30), ownerId int, PRIMARY KEY (petId), FOREIGN KEY (ownerId) REFERENCES Owner (ownerId) );
+
 #6
 INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Spot', '01/01/01', '1' );
 INSERT INTO Pet ( petName, petDOB, ownerId ) VALUES ( 'Gojira', '02/02/12', '1' );
